@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -35,9 +37,29 @@ func Run(ctx context.Context, cfg *config.Config) error {
 	}
 	log.Printf("Found %d URLs in sitemap", len(urls))
 
+	// Filter URLs by include/exclude patterns
+	if len(cfg.Include) > 0 || len(cfg.Exclude) > 0 {
+		filtered := urls[:0]
+		for _, u := range urls {
+			if matchesFilter(u, cfg.Include, cfg.Exclude) {
+				filtered = append(filtered, u)
+			}
+		}
+		log.Printf("Filtered to %d URLs (from %d)", len(filtered), len(urls))
+		urls = filtered
+	}
+
 	if len(urls) == 0 {
 		log.Println("No URLs found in sitemap. Nothing to do.")
 		return nil
+	}
+
+	// Clean output directory if requested
+	if cfg.Clean {
+		log.Printf("Cleaning output directory: %s", cfg.OutputDir)
+		if err := os.RemoveAll(cfg.OutputDir); err != nil {
+			return fmt.Errorf("cleaning output directory: %w", err)
+		}
 	}
 
 	// Fan-out: send URLs to workers
@@ -188,4 +210,28 @@ func processPage(ctx context.Context, f *fetcher.Fetcher, cfg *config.Config, pa
 		Title:    title,
 		Markdown: markdown,
 	}
+}
+
+// matchesFilter returns true if the URL passes include/exclude filters.
+// If include is non-empty, the URL must contain at least one include substring.
+// If exclude is non-empty, the URL must not contain any exclude substring.
+func matchesFilter(url string, include, exclude []string) bool {
+	if len(include) > 0 {
+		matched := false
+		for _, pattern := range include {
+			if strings.Contains(url, pattern) {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			return false
+		}
+	}
+	for _, pattern := range exclude {
+		if strings.Contains(url, pattern) {
+			return false
+		}
+	}
+	return true
 }

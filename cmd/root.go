@@ -36,6 +36,9 @@ func init() {
 	rootCmd.Flags().IntVarP(&cfg.DelayMS, "delay", "d", 200, "delay between requests per worker (ms)")
 	rootCmd.Flags().BoolVar(&cfg.SingleFile, "single-file", false, "also produce a single concatenated all-pages.md")
 	rootCmd.Flags().StringVar(&cfg.Selector, "selector", "", "CSS selector for main content area (default: auto-detect)")
+	rootCmd.Flags().StringSliceVar(&cfg.Include, "include", nil, "only process URLs containing this substring (repeatable)")
+	rootCmd.Flags().StringSliceVar(&cfg.Exclude, "exclude", nil, "skip URLs containing this substring (repeatable)")
+	rootCmd.Flags().BoolVar(&cfg.Clean, "clean", false, "remove output directory before writing")
 	rootCmd.Flags().BoolVarP(&cfg.Verbose, "verbose", "v", false, "verbose logging")
 	rootCmd.Flags().StringVar(&cfg.UserAgent, "user-agent", "docs-cloner/1.0", "custom User-Agent string")
 
