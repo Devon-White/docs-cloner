@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/devon/docs-cloner/internal/config"
-	"github.com/devon/docs-cloner/internal/pipeline"
+	"github.com/Devon-White/docs-cloner/internal/config"
+	"github.com/Devon-White/docs-cloner/internal/pipeline"
 	"github.com/spf13/cobra"
 )
 

@@ -12,7 +12,7 @@ import (
 	"github.com/JohannesKaufmann/html-to-markdown/v2/plugin/commonmark"
 	"github.com/JohannesKaufmann/html-to-markdown/v2/plugin/table"
 
-	"github.com/devon/docs-cloner/internal/fetcher"
+	"github.com/Devon-White/docs-cloner/internal/fetcher"
 )
 
 // removeTags are HTML tags that should be stripped entirely during conversion.

@@ -7,12 +7,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/devon/docs-cloner/internal/config"
-	"github.com/devon/docs-cloner/internal/converter"
-	"github.com/devon/docs-cloner/internal/extractor"
-	"github.com/devon/docs-cloner/internal/fetcher"
-	"github.com/devon/docs-cloner/internal/sitemap"
-	"github.com/devon/docs-cloner/internal/writer"
+	"github.com/Devon-White/docs-cloner/internal/config"
+	"github.com/Devon-White/docs-cloner/internal/converter"
+	"github.com/Devon-White/docs-cloner/internal/extractor"
+	"github.com/Devon-White/docs-cloner/internal/fetcher"
+	"github.com/Devon-White/docs-cloner/internal/sitemap"
+	"github.com/Devon-White/docs-cloner/internal/writer"
 )
 
 type pageResult struct {

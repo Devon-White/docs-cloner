@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/devon/docs-cloner/cmd"
+	"github.com/Devon-White/docs-cloner/cmd"
 )
 
 func main() {
