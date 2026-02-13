@@ -56,6 +56,18 @@ If the auto-detection picks up the wrong content area, specify a CSS selector:
 docs-cloner --url https://example.com/sitemap.xml --selector ".docs-content"
 ```
 
+### Filter by URL pattern
+
+```bash
+# Only grab English docs
+docs-cloner --url https://example.com/sitemap.xml --include docs/en/
+
+# Grab everything except the blog
+docs-cloner --url https://example.com/sitemap.xml --exclude blog/
+```
+
+> **Git Bash (Windows):** Omit the leading `/` from filter patterns (use `docs/en/` not `/docs/en/`). Git Bash rewrites arguments starting with `/` into Windows paths, which breaks the filter. Alternatively, set `MSYS_NO_PATHCONV=1`.
+
 ### Polite crawling
 
 ```bash
@@ -106,6 +118,9 @@ Flags:
   -d, --delay int                  Per-worker delay between requests in ms (default 200)
       --single-file                Also produce a single concatenated all-pages.md
       --selector string            CSS selector for main content (default: auto-detect)
+      --include strings            Only process URLs containing this substring (repeatable)
+      --exclude strings            Skip URLs containing this substring (repeatable)
+      --clean                      Remove output directory before writing
   -v, --verbose                    Log every page
       --user-agent string          Custom User-Agent (default "docs-cloner/1.0")
   -h, --help                       Show help

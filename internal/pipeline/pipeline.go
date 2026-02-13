@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
 	"runtime"
 	"strings"
 	"sync"
@@ -39,24 +38,25 @@ func Run(ctx context.Context, cfg *config.Config) error {
 	}
 	log.Printf("Found %d URLs in sitemap", len(urls))
 
-	// Fix MSYS/Git Bash path mangling on Windows (e.g. /docs/en/ → C:/Program Files/Git/docs/en/)
-	include := sanitizeMSYSPaths(cfg.Include)
-	exclude := sanitizeMSYSPaths(cfg.Exclude)
-
 	// Filter URLs by include/exclude patterns
-	if len(include) > 0 || len(exclude) > 0 {
+	if len(cfg.Include) > 0 || len(cfg.Exclude) > 0 {
 		filtered := urls[:0]
 		for _, u := range urls {
-			if matchesFilter(u, include, exclude) {
+			if matchesFilter(u, cfg.Include, cfg.Exclude) {
 				filtered = append(filtered, u)
 			}
 		}
 		log.Printf("Filtered to %d URLs (from %d)", len(filtered), len(urls))
 		urls = filtered
+
+		if len(urls) == 0 && runtime.GOOS == "windows" {
+			log.Println("Hint: Git Bash rewrites args starting with \"/\" into Windows paths.")
+			log.Println("      Use --include docs/en/ (no leading /) or set MSYS_NO_PATHCONV=1")
+		}
 	}
 
 	if len(urls) == 0 {
-		log.Println("No URLs found in sitemap. Nothing to do.")
+		log.Println("No URLs found after filtering. Nothing to do.")
 		return nil
 	}
 
@@ -242,25 +242,3 @@ func matchesFilter(url string, include, exclude []string) bool {
 	return true
 }
 
-// msysPathRe matches MSYS/Git Bash mangled paths like "C:/Program Files/Git/docs/en/"
-var msysPathRe = regexp.MustCompile(`^[A-Za-z]:/.*?/Git(/.*)$`)
-
-// sanitizeMSYSPaths detects and fixes MSYS/Git Bash path mangling on Windows.
-// Git Bash converts CLI args starting with "/" into Windows paths, e.g.
-// "/docs/en/" becomes "C:/Program Files/Git/docs/en/". This recovers the
-// original unix-style path.
-func sanitizeMSYSPaths(patterns []string) []string {
-	if runtime.GOOS != "windows" || len(patterns) == 0 {
-		return patterns
-	}
-	fixed := make([]string, len(patterns))
-	for i, p := range patterns {
-		if m := msysPathRe.FindStringSubmatch(p); m != nil {
-			log.Printf("Auto-corrected MSYS path %q → %q", p, m[1])
-			fixed[i] = m[1]
-		} else {
-			fixed[i] = p
-		}
-	}
-	return fixed
-}
