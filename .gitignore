@@ -1,0 +1,21 @@
+# Build binary
+docs-cloner
+docs-cloner.exe
+
+# Output directories
+output/
+test-output/
+
+# Go
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
