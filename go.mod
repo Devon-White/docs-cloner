@@ -12,6 +12,6 @@ require (
 	github.com/JohannesKaufmann/dom v0.2.0 // indirect
 	github.com/andybalholm/cascadia v1.3.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.9 // indirect
-	golang.org/x/net v0.47.0 // indirect
+	github.com/spf13/pflag v1.0.10 // indirect
+	golang.org/x/net v0.50.0 // indirect
 )
